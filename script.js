@@ -1,79 +1,69 @@
-// Current Date Function
-function updateDate() {
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date').innerText = now.toLocaleDateString('en-US', options);
-}
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.onclick = () => navLinks.classList.toggle('active');
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.onclick = () => navLinks.classList.remove('active');
+});
 
-// Page Navigation with Sound
-function openPage(pageId, navEl) {
-    document.getElementById('clickSound').play();
-    document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-    const target = document.getElementById(pageId);
-    target.style.display = 'block';
-    setTimeout(() => target.classList.add('active'), 10);
-    navEl.classList.add('active');
-    document.getElementById('page-title').innerText = navEl.innerText;
-}
-
-window.onload = () => {
-    updateDate();
-
-    // 1. Dashboard Live Line Graph
-    
-    const liveCtx = document.getElementById('liveLineChart').getContext('2d');
-    let liveData = [50, 60, 55, 70, 65, 80, 75];
-    const liveChart = new Chart(liveCtx, {
-        type: 'line',
-        data: {
-            labels: ['10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm'],
-            datasets: [{ data: liveData, borderColor: '#fde047', tension: 0.4, fill: true, backgroundColor: 'rgba(253, 224, 71, 0.05)', pointRadius: 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
-
-    // 2. History Bar Chart
-    
-    const barCtx = document.getElementById('historyBarChart').getContext('2d');
-    new Chart(barCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{ label: 'Volume', data: [400, 700, 500, 900, 600, 800, 950], backgroundColor: '#fde047', borderRadius: 10 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
-
-    // 3. Asset Donut Chart
-    
-    const donutCtx = document.getElementById('assetDonutChart').getContext('2d');
-    new Chart(donutCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['BTC', 'ETH', 'USDT'],
-            datasets: [{ data: [45, 25, 30], backgroundColor: ['#fde047', '#627eea', '#14f195'], borderWidth: 0 }]
-        },
-        options: { cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }
-    });
-
-    // 4. Settings Radar Chart
-    
-    const radarCtx = document.getElementById('settingsRadarChart').getContext('2d');
-    new Chart(radarCtx, {
-        type: 'radar',
-        data: {
-            labels: ['Security', 'Speed', 'Uptime', 'UI', 'Privacy'],
-            datasets: [{ data: [100, 90, 98, 85, 95], borderColor: '#fde047', backgroundColor: 'rgba(253, 224, 71, 0.2)' }]
-        },
-        options: { plugins: { legend: { display: false } }, scales: { r: { grid: { color: '#333' }, pointLabels: { color: '#71717a' } } } }
-    });
-
-    // Simulate Live Price Update
-    setInterval(() => {
-        liveData.push(liveData[liveData.length - 1] + (Math.random() * 10 - 5));
-        liveData.shift();
-        liveChart.update();
-    }, 2000);
+// Unique Content for Each Navbar Section
+const masterData = {
+    'about-grid': [
+        { t: "The Vision", i: "👁️", tag: "CORE", d: "Pushing the boundaries of web technology through innovative MSC research and modern design." },
+        { t: "Expertise", i: "🎯", tag: "PROFILE", d: "Specializing in creating seamless transitions between complex data and intuitive user interfaces." },
+        { t: "Philosophy", i: "🛡️", tag: "VALUES", d: "Prioritizing security, scalability, and speed in every digital architecture built." }
+    ],
+    'edu-grid': [
+        { t: "MSc Computer Science", i: "🎓", tag: "CURRENT", d: "Advanced study in Artificial Intelligence, Neural Networks, and Distributed Systems." },
+        { t: "BS Information Tech", i: "📜", tag: "COMPLETED", d: "Foundational mastery in software development life cycles and database management." },
+        { t: "Tech Certifications", i: "🎖️", tag: "ACCREDITED", d: "Google and Microsoft certified in Cloud Infrastructure and Modern Web Security." }
+    ],
+    'exp-grid': [
+        { t: "Senior Web Architect", i: "🏗️", tag: "2024-PRES", d: "Lead developer for futuristic dashboard systems and real-time monitoring tools." },
+        { t: "Full Stack Engineer", i: "💻", tag: "2022-2024", d: "Developed and maintained 15+ high-traffic applications using React and Node.js." },
+        { t: "Interface Designer", i: "🎨", tag: "2021", d: "Focused on human-computer interaction and glassmorphism UI design research." }
+    ],
+    'skills-grid': [
+        { t: "Frontend Stack", i: "⚛️", tag: "EXPERT", d: "Deep knowledge in React.js, Next.js, and advanced CSS/Three.js animations." },
+        { t: "Backend Engine", i: "⚙️", tag: "MASTER", d: "Building robust REST APIs with Node.js, Express, and Python FastAPI." },
+        { t: "Cloud & DevOps", i: "☁️", tag: "SKILLED", d: "Proficient in Docker, AWS, and CI/CD pipelines for automated deployments." }
+    ],
+    'port-grid': [
+        { t: "Nebula Dashboard", i: "🌌", tag: "LIVE", d: "A revolutionary AI monitoring dashboard with real-time 3D data visualization." },
+        { t: "Crypto Protocol", i: "🔐", tag: "STABLE", d: "Decentralized wallet interface with multi-layer encryption and biometric locks." },
+        { t: "Echo UI Kit", i: "📦", tag: "V1.0", d: "An open-source library of futuristic components for high-speed web apps." }
+    ],
+    'contact-grid': [
+        { t: "Secure Email", i: "📧", tag: "PRIMARY", d: "kiran.shahzadi@official.com - Available for high-level collaborations." },
+        { t: "LinkedIn Node", i: "🔗", tag: "NETWORK", d: "Connect for professional insights and industry-leading networking." },
+        { t: "GitHub Repository", i: "📂", tag: "OPEN_SRC", d: "Access my core engines and latest experimental code deployments." }
+    ]
 };
+
+// Render Cards
+Object.keys(masterData).forEach(gridId => {
+    const container = document.getElementById(gridId);
+    if (container) {
+        masterData[gridId].forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'cyber-card';
+            card.innerHTML = `
+                        <div>
+                            <span class="card-tag">${item.tag} // _0${index + 1}</span>
+                            <div class="card-icon">${item.i}</div>
+                            <h3 style="font-family:'Syncopate'; font-size: 0.8rem;">${item.t}</h3>
+                        </div>
+                        <span style="font-size:0.6rem; color:var(--primary); font-weight:700; margin-top:15px;">OPEN ENCRYPTION →</span>
+                    `;
+            card.onclick = () => {
+                document.getElementById('modalTitle').innerText = item.t;
+                document.getElementById('modalDesc').innerText = item.d;
+                document.getElementById('modalTag').innerText = item.tag + " DATA_LOG";
+                document.getElementById('modalOverlay').classList.add('active');
+            };
+            container.appendChild(card);
+        });
+    }
+});
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+window.onclick = (e) => { if (e.target.id === 'modalOverlay') closeModal(); }
